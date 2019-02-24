@@ -1,0 +1,19 @@
+.page1 {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: var(--mainColor);
+  background: darkcyan;
+}
+
+.page1 span {
+  margin-left: 20px;
+  font-size: 26px;
+  font-weight: bold;
+}
+
+.react-logo {
+  width: 100px;
+}

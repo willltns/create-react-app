@@ -1,21 +1,7 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
-
-## Available Scripts
-
-In the project directory, you can run:
-
 ### `npm start`
 
 Runs the app in the development mode.<br>
 Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
-
-The page will reload if you make edits.<br>
-You will also see any lint errors in the console.
-
-### `npm test`
-
-Launches the test runner in the interactive watch mode.<br>
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
 
 ### `npm run build`
 
@@ -27,42 +13,96 @@ Your app is ready to be deployed!
 
 See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-### `npm run eject`
+### `npm run test`
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+打包生产测试环境代码. 区别**测试环境变量** `process.env.PROTEST === 'PROTest'` 为 `true`.
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### `npm run analyzer`
 
-Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+生产环境代码打包分析 `webpack-bundle-analyzer`.
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+## libraries & version control
+注意根目录下 `package.json` `dependencies` **依赖版本控制**. 若有 `^`, 将其去掉.
+```
+"js-cookie": "2.2.0"
+"blueimp-md5": "2.10.0"
+...
+// 以后部分关联项目可能会统一依赖库
+```
+每次安装依赖库应指定对应版本号. `e.g. yarn add react@16.6.0`.
 
-## Learn More
+## 代码格式化 ！！
+初次创建项目时需手动安装 `prettier`, `husky`, `lint-staged`. 
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+`yarn add prettier husky lint-staged` or `npm install prettier husky lint-staged --save`.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+`git commit` 时会自动格式化， 配置内容在根目录 `package.json` 文件内.
 
-### Code Splitting
+## 移动端自适配注意事项 (mobile)
+自适配文件位置 `src\common\utils\flexible.js`.
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
+默认已在 `index.html` 中引入.
 
-### Analyzing the Bundle Size
+**PC页面开发**请删除 `.env` 文件相关copyPlugin配置参数 以及 `public/index.html` 中对 `flexible.js` 文件的引用.
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
+## antd 配置
+`yarn add antd` or `npm install antd --save`.
+- antd 按需加载
+  1. `yarn add babel-plugin-import less` or `npm install babel-plugin-import less --save`.
+  2. 根目录 `.babelrc` 文件配置内容:
+  ```
+  {
+    "plugins": [
+      [
+        "import", 
+        { 
+          "libraryName": "antd", 
+          "libraryDirectory": "es", 
+          "style": true 
+        }
+      ]
+    ]
+  }
+  ```
+- antd 自定义主题 [相关链接](https://ant.design/docs/react/customize-theme-cn)
 
-### Making a Progressive Web App
+  根目录 `.env` 文件:
+  
+  `REACT_APP_ANTD_LESS_VARS={ "@primary-color": "#006789", "@btn-primary-bg": "red" }`
+    
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
+## lodash 使用注意
+`yarn add lodash` or `npm install lodash --save`.
 
-### Advanced Configuration
+建议使用**全路径引用**， 例： `import debounce from 'lodash/debounce'`.
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
+##### lodash tree shaking
+1. `yarn add babel-plugin-lodash` or `npm install babel-plugin-lodash --save`.
+2. `.babelrc` 文件:
+    ```
+    {
+      "plugins": [
+        ["lodash"]
+      ]
+    }
+    ```
+3. `.env` 文件添加自定义环境变量 `REACT_APP_LODASH_SHAKING=true`.
 
-### Deployment
+## Adding Custom Environment Variables
+`.env`. `.env.development`. `.env.production` ... [添加自定义环境变量](https://facebook.github.io/create-react-app/docs/adding-custom-environment-variables). [高级配置](https://facebook.github.io/create-react-app/docs/advanced-configuration).
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
+## Copies individual files or entire directories to the build directory.(将单个文件或整个目录复制到构建目录)
+`.env`文件:
+```
+REACT_APP_COPY_FILES=[{ "from": "src/common/utils/flexible.js", "to": "./utils" }]
+REACT_APP_COPY_OPTION={ "context": "./" }
+```
+具体配置查看 [copy-webpack-plugin](https://github.com/webpack-contrib/copy-webpack-plugin).
 
-### `npm run build` fails to minify
+## 分离打包部分依赖库，提高构建速度 （dllPlugin & dllReferencePlugin）
+`.env`文件：
+```
+REACT_APP_DLL_INJECT=false // 配置此参数将不会将打包的依赖bundle注入index.html.
+REACT_APP_DLL_LIBS=["react", "react-dom", "redux", "axios", "qs"] // 配置分离依赖库， 此示例为默认.
+```
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
