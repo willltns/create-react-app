@@ -11,25 +11,36 @@ It correctly bundles React in production mode and optimizes the build for the be
 The build is minified and the filenames include the hashes.<br>
 Your app is ready to be deployed!
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+See the section about [deployment](https://create-react-app.dev/docs/deployment/) for more information.
 
-### `npm run test`
+### 不同生产测试环境
 
-打包生产测试环境代码. 区别**测试环境变量** `process.env.PROTEST === 'PROTest'` 为 `true`.
+[针对不同生产环境自定义环境变量](https://create-react-app.dev/docs/deployment/#customizing-environment-variables-for-arbitrary-build-environments)
+
+例如，创建一个生产测试环境:
+
+1. 根目录下创建一个名为 `.env.prodtest` 的文件
+2. 设置区别于真实生产环境的生产测试环境变量 `.env.prodtest` file (e.g. `REACT_APP_API_URL=http://test.ltns.com`)
+3. 安装 [env-cmd](https://www.npmjs.com/package/env-cmd)
+   ```sh
+   $ npm install env-cmd --save
+   $ # or
+   $ yarn add env-cmd
+   ```
+4. 在 `package.json` 中 `scripts` 字段下添加新的脚本命令，以针对构建打包的生产测试环境注入 `.env.prodtest` 文件配置的变量
+   ```json
+   {
+     "scripts": {
+       "build:test": "env-cmd -f .env.prodtest npm run build"
+     }
+   }
+   ```
 
 ### `npm run analyzer`
 
-生产环境代码打包分析 `webpack-bundle-analyzer`.
+生产环境代码打包可视化分析 `webpack-bundle-analyzer`.
 
-## libraries & version control
-注意根目录下 `package.json` `dependencies` **依赖版本控制**. 若有 `^`, 将其去掉.
-```
-"js-cookie": "2.2.0"
-"blueimp-md5": "2.10.0"
-...
-// 以后部分关联项目可能会统一依赖库
-```
-每次安装依赖库应指定对应版本号. `e.g. yarn add react@16.6.0`.
+或采用官方推荐方式 --> [Analyzing the Bundle Size](https://create-react-app.dev/docs/analyzing-the-bundle-size/)
 
 ## 代码格式化 ！！
 初次创建项目时需手动安装 `prettier`, `husky`, `lint-staged`. 
@@ -38,17 +49,17 @@ See the section about [deployment](https://facebook.github.io/create-react-app/d
 
 `git commit` 时会自动格式化， 配置内容在根目录 `package.json` 文件内.
 
-## 移动端自适配注意事项 (mobile)
-自适配文件位置 `src\common\utils\flexible.js`.
+## 移动端动态适配注意事项 (mobile)
+动态适配文件位置 `src\common\utils\flexible.js`.
 
 默认已在 `index.html` 中引入.
 
-**PC页面开发**请删除 `.env` 文件相关copyPlugin配置参数 以及 `public/index.html` 中对 `flexible.js` 文件的引用.
+**PC页面开发**请删除 `webpack.rewire.js` 文件相关copyPlugin配置参数 以及 `public/index.html` 中对 `flexible.js` 文件的引用.
 
 ## antd 配置
 `yarn add antd` or `npm install antd --save`.
 - antd 按需加载
-  1. `yarn add babel-plugin-import less` or `npm install babel-plugin-import less --save`.
+  1. `yarn add babel-plugin-import` or `npm install babel-plugin-import --save`.
   2. 根目录 `.babelrc` 文件配置内容:
   ```
   {
@@ -65,12 +76,7 @@ See the section about [deployment](https://facebook.github.io/create-react-app/d
   }
   ```
 - antd 自定义主题 [相关链接](https://ant.design/docs/react/customize-theme-cn)
-
-  根目录 `.env` 文件:
-  
-  `REACT_APP_ANTD_LESS_VARS={ "@primary-color": "#006789", "@btn-primary-bg": "red" }`
     
-
 ## lodash 使用注意
 `yarn add lodash` or `npm install lodash --save`.
 
@@ -89,15 +95,7 @@ See the section about [deployment](https://facebook.github.io/create-react-app/d
 3. `.env` 文件添加自定义环境变量 `REACT_APP_LODASH_SHAKING=true`.
 
 ## Adding Custom Environment Variables
-`.env`. `.env.development`. `.env.production` ... [添加自定义环境变量](https://facebook.github.io/create-react-app/docs/adding-custom-environment-variables). [高级配置](https://facebook.github.io/create-react-app/docs/advanced-configuration).
-
-## Copies individual files or entire directories to the build directory.(将单个文件或整个目录复制到构建目录)
-`.env`文件:
-```
-REACT_APP_COPY_FILES=[{ "from": "src/common/utils/flexible.js", "to": "./utils" }]
-REACT_APP_COPY_OPTION={ "context": "./" }
-```
-具体配置查看 [copy-webpack-plugin](https://github.com/webpack-contrib/copy-webpack-plugin).
+`.env`. `.env.development`. `.env.production` ... [添加自定义环境变量](https://create-react-app.dev/docs/adding-custom-environment-variables/). [高级配置](https://create-react-app.dev/docs/advanced-configuration/).
 
 ## 分离打包部分依赖库，提高构建速度 （dllPlugin & dllReferencePlugin）
 `.env`文件：

@@ -112,31 +112,14 @@ module.exports = function(webpackEnv) {
         },
       },
     ].filter(Boolean);
+
     if (preProcessor) {
-
-      if (preProcessor !== 'less-loader') { // @willltns before $$
-        loaders.push({
-          loader: require.resolve(preProcessor),
-          options: {
-            sourceMap: isEnvProduction ? shouldUseSourceMap : isEnvDevelopment,
-          },
-        });
-      } // @willltns before $$
-
-      // @willltns-begin
-      if (preProcessor === 'less-loader') {
-        loaders.push({
-          loader: require.resolve(preProcessor),
-          options: {
-            modifyVars: process.env.REACT_APP_ANTD_LESS_VARS
-              ? JSON.parse(process.env.REACT_APP_ANTD_LESS_VARS)
-              : {},
-            javascriptEnabled: true,
-            sourceMap: isEnvProduction ? shouldUseSourceMap : isEnvDevelopment,
-          },
-        });
-      }
-      // @willltns-end
+      loaders.push({
+        loader: require.resolve(preProcessor),
+        options: {
+          sourceMap: isEnvProduction ? shouldUseSourceMap : isEnvDevelopment,
+        },
+      });
     }
     return loaders;
   };
@@ -149,7 +132,7 @@ module.exports = function(webpackEnv) {
       ? shouldUseSourceMap
         ? 'source-map'
         : false
-      : isEnvDevelopment && 'cheap-module-eval-source-map', // @willltns before $$: isEnvDevelopment && 'eval-source-map',
+      : isEnvDevelopment && 'eval-source-map',
     // These are the "entry points" to our application.
     // This means they will be the "root" imports that are included in JS bundle.
     entry: [
@@ -369,7 +352,7 @@ module.exports = function(webpackEnv) {
                   'babel-preset-react-app/webpack-overrides'
                 ),
                 // @remove-on-eject-begin
-                babelrc: true, // @willltns before $$babelrc: false,
+                babelrc: false,
                 configFile: false,
                 presets: [require.resolve('babel-preset-react-app')],
                 // Make sure we have a unique cache identifier, erring on the
@@ -520,21 +503,6 @@ module.exports = function(webpackEnv) {
               ),
             },
 
-            // @willltns-begin
-            {
-              test: /\.less$/,
-              use: getStyleLoaders(
-                {
-                  importLoaders: 2,
-                  sourceMap: isEnvProduction
-                    ? shouldUseSourceMap
-                    : isEnvDevelopment,
-                },
-                'less-loader'
-              ),
-            },
-            // @willltns-end
-
             // "file" loader makes sure those assets get served by WebpackDevServer.
             // When you `import` an asset, you get its (virtual) filename.
             // In production, they would get copied to the `build` folder.
@@ -682,10 +650,6 @@ module.exports = function(webpackEnv) {
           silent: true,
           formatter: typescriptFormatter,
         }),
-
-      // @willltns-begin
-      ...require('./customPlugins')(isEnvProduction),
-      // @willltns-end
     ].filter(Boolean),
     // Some libraries import Node modules but don't use them in the browser.
     // Tell Webpack to provide empty mocks for them so importing them works.

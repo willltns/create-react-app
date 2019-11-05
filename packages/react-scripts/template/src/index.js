@@ -1,8 +1,8 @@
 import ReactDOM from 'react-dom'
 import { Provider } from 'react-redux'
 import React, { Suspense } from 'react'
+import { createBrowserHistory } from 'history'
 import { ConnectedRouter } from 'connected-react-router'
-import createBrowserHistory from 'history/createBrowserHistory'
 
 import configureStore from './configureStore'
 import * as serviceWorker from './serviceWorker'

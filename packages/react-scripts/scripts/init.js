@@ -97,10 +97,7 @@ module.exports = function(
   appPackage.scripts = {
     start: 'react-scripts start',
     build: 'react-scripts build',
-    test: 'npm run build --protest',// @willltns before $$test: 'react-scripts test',
-    // @willltns-begin
-    analyzer: 'npm run build --analyzer',
-    // @willltns-end
+    test: 'react-scripts test',
     eject: 'react-scripts eject',
   };
 
