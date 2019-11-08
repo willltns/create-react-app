@@ -1,20 +1,36 @@
+const fs = require('fs')
+const path = require('path')
 const webpack = require('webpack')
 const merge = require('webpack-merge')
 const CopyPlugin = require('copy-webpack-plugin')
 
 const shouldUseSourceMap = process.env.GENERATE_SOURCEMAP !== 'false'
 
+const assetsPath = path.resolve(__dirname, './src/common/dll/assets.json')
+if (process.env.NODE_ENV === 'production' && !fs.existsSync(assetsPath)) {
+  throw new Error('\n \n    assets.json file not exists, you need first build dll vendor. \n    Please see README.md for more details.\n')
+}
+const dllAssets = require(assetsPath)
+
 module.exports = function(config, webpackEnv) {
-  const isEnvDevelopment = webpackEnv === 'development';
-  const isEnvProduction = webpackEnv === 'production';
+  const isEnvDevelopment = webpackEnv === 'development'
+  const isEnvProduction = webpackEnv === 'production'
 
   const mergedConfig = merge(config, {
     plugins: [
-      new webpack.HashedModuleIdsPlugin(),
+      isEnvProduction && new webpack.HashedModuleIdsPlugin(),
 
-      new CopyPlugin([
-        { 'from': 'src/common/utils/flexible.js', 'to': './utils' }
-      ]),
+      isEnvProduction && new webpack.DllReferencePlugin({
+        manifest: require(
+          path.resolve(__dirname, './src/common/dll/vendor-manifest.json')
+        ),
+      }),
+
+      isEnvProduction && new CopyPlugin(
+        [{ from: './src/common/dll/' + dllAssets.vendor.js, to: './static/js' }]
+      ),
+
+      process.env.npm_config_analyze === 'true' && new BundleAnalyzerPlugin(),
 
     ].filter(Boolean),
   });
@@ -43,6 +59,16 @@ module.exports = function(config, webpackEnv) {
     ],
     sideEffects: true,
   })
+
+  // htmlWebpackPlugin instance
+  if (isEnvProduction) {
+    const htmlPlugin = mergedConfig.plugins.find(
+      plugin =>
+        plugin.constructor &&
+        plugin.constructor.name === 'HtmlWebpackPlugin'
+    )
+    htmlPlugin.options.dllVendor = 'static/js/' + dllAssets.vendor.js
+  }
 
   return mergedConfig;
 };
