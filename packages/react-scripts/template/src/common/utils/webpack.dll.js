@@ -2,7 +2,6 @@ const path = require('path')
 const webpack = require('webpack')
 const AssetsPlugin = require('assets-webpack-plugin')
 const { CleanWebpackPlugin } = require('clean-webpack-plugin')
-const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
 
 module.exports = {
   mode: 'production',
@@ -35,6 +34,5 @@ module.exports = {
       filename: 'assets.json',
       path: path.resolve(__dirname, '../dll'),
     }),
-    process.env.npm_config_analyze === 'true' && new BundleAnalyzerPlugin(),
   ].filter(Boolean),
 }

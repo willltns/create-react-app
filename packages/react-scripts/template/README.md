@@ -5,6 +5,8 @@ Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
 ### `npm run build`
 
+Before run `npm run build`, Please see dll-related information below first.<br>
+
 Builds the app for production to the `build` folder.<br>
 It correctly bundles React in production mode and optimizes the build for the best performance.
 
@@ -13,94 +15,110 @@ Your app is ready to be deployed!
 
 See the section about [deployment](https://create-react-app.dev/docs/deployment/) for more information.
 
-### 不同生产测试环境
+### Packing stable libs in one chunk. (dll vendor) (dllPlugin & dllReferencePlugin)
+If you do not need dll vendor chunk, you should delete dll-related configuration in file `webpack.rewire.js`,
+delete file `./src/common/utils/webpack.dll.js`, and ignore the steps below.
 
-[针对不同生产环境自定义环境变量](https://create-react-app.dev/docs/deployment/#customizing-environment-variables-for-arbitrary-build-environments)
-
-例如，创建一个生产测试环境:
-
-1. 根目录下创建一个名为 `.env.prodtest` 的文件
-2. 设置区别于真实生产环境的生产测试环境变量 `.env.prodtest` file (e.g. `REACT_APP_API_URL=http://test.ltns.com`)
-3. 安装 [env-cmd](https://www.npmjs.com/package/env-cmd)
-   ```sh
-   $ npm install env-cmd --save
-   $ # or
-   $ yarn add env-cmd
-   ```
-4. 在 `package.json` 中 `scripts` 字段下添加新的脚本命令，以针对构建打包的生产测试环境注入 `.env.prodtest` 文件配置的变量
+Or following the steps to build vendor file:
+1. `yarn add copy-webpack-plugin` & `yarn add webpack-cli clean-webpack-plugin assets-webpack-plugin -D`
+2. In `package.json`, add new script command:
    ```json
    {
      "scripts": {
-       "build:test": "env-cmd -f .env.prodtest npm run build"
+       "build:dll": "webpack --config ./src/common/utils/webpack.dll.js"
      }
    }
    ```
+3. Execute command `yarn build:dll`, you'll get a vendor chunk. More configurations please edit `webpack.dll.js`.
 
-### `npm run analyzer`
+### Code Formatting
+Using `prettier`. If you do not need, you can delete `.prettierrc` file in the project's root dir.
+and ignore steps below.
 
-生产环境代码打包可视化分析 `webpack-bundle-analyzer`.
+At first time project initial stage, you should manually install `prettier`, `husky`, `lint-staged`. 
+1. Install related dependencies. 
+   ```sh
+   $ npm install prettier husky lint-staged --save-dev
+   $ # or
+   $ yarn add prettier husky lint-staged -D
+   ```
+2. In `package.json`, add properties:
+   ```json
+   {
+     "husky": {
+       "hooks": {
+         "pre-commit": "lint-staged"
+       }
+     },
+     "lint-staged": {
+       "*.{js,jsx,json}": [
+         "prettier --single-quote --trailing-comma es5 --write",
+         "git add"
+       ],
+       "*.{css,less}": [
+         "prettier --parser css --write",
+         "git add"
+       ]
+     }
+   }
+   ``` 
 
-或采用官方推荐方式 --> [Analyzing the Bundle Size](https://create-react-app.dev/docs/analyzing-the-bundle-size/)
 
-## 代码格式化 ！！
-初次创建项目时需手动安装 `prettier`, `husky`, `lint-staged`. 
+### Customizing Environment Variables for Arbitrary Build Environments
+You can create an arbitrary build environment by creating a custom .env file and loading it using [env-cmd](https://www.npmjs.com/package/env-cmd).
 
-`yarn add prettier husky lint-staged` or `npm install prettier husky lint-staged --save`.
+[https://create-react-app.dev/docs/deployment/#customizing-environment-variables-for-arbitrary-build-environments](https://create-react-app.dev/docs/deployment/#customizing-environment-variables-for-arbitrary-build-environments)
+   
+### Adding Custom Environment Variables
+`.env`. `.env.development`. `.env.production` ... 
 
-`git commit` 时会自动格式化， 配置内容在根目录 `package.json` 文件内.
+[https://create-react-app.dev/docs/adding-custom-environment-variables/](https://create-react-app.dev/docs/adding-custom-environment-variables/). 
 
-## 移动端动态适配注意事项 (mobile)
-动态适配文件位置 `src\common\utils\flexible.js`.
+[https://create-react-app.dev/docs/advanced-configuration/](https://create-react-app.dev/docs/advanced-configuration/).
 
-默认已在 `index.html` 中引入.
+### Analyzing the bundle size. (Visualizing)
+1. webpack-bundle-analyzer
+   - `yarn add webpack-bundle-analyzer -D`.
+   - Add plugin instance to the wepback's `plugins` property:
+		```javascript
+		const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
+		process.env.npm_config_analyze === 'true' && new BundleAnalyzerPlugin()
+		```
+   - Finally execute `npm run build --analyze`
 
-**PC页面开发**请删除 `webpack.rewire.js` 文件相关copyPlugin配置参数 以及 `public/index.html` 中对 `flexible.js` 文件的引用.
 
-## antd 配置
+2. Or the official recommended way --> [Analyzing the Bundle Size](https://create-react-app.dev/docs/analyzing-the-bundle-size/)
+
+When executing `git commit`, it would automatically formatting your code.
+
+### ant-design
 `yarn add antd` or `npm install antd --save`.
-- antd 按需加载
+- Modularized antd
   1. `yarn add babel-plugin-import` or `npm install babel-plugin-import --save`.
-  2. 根目录 `.babelrc` 文件配置内容:
+  2. In `webpack.rewire.js`, add code:
+  ```javascript
+  babelOptions.plugins.push(["import", { "libraryName": "antd", "libraryDirectory": "es", "style": true }])
   ```
-  {
-    "plugins": [
-      [
-        "import", 
-        { 
-          "libraryName": "antd", 
-          "libraryDirectory": "es", 
-          "style": true 
-        }
-      ]
-    ]
-  }
-  ```
-- antd 自定义主题 [相关链接](https://ant.design/docs/react/customize-theme-cn)
+- [antd Customizing Theme](https://ant.design/docs/react/customize-theme-cn), `less-loader` -> `modifyVars`
     
-## lodash 使用注意
+### lodash
 `yarn add lodash` or `npm install lodash --save`.
 
-建议使用**全路径引用**， 例： `import debounce from 'lodash/debounce'`.
+Recommend importing function through full module path, eg： `import debounce from 'lodash/debounce'`.
 
 ##### lodash tree shaking
-1. `yarn add babel-plugin-lodash` or `npm install babel-plugin-lodash --save`.
-2. `.babelrc` 文件:
-    ```
-    {
-      "plugins": [
-        ["lodash"]
-      ]
-    }
-    ```
-3. `.env` 文件添加自定义环境变量 `REACT_APP_LODASH_SHAKING=true`.
+1. Install related dependencies. 
+   ```sh
+   $ npm install lodash-webpack-plugin babel-plugin-lodash --save
+   $ # or
+   $ yarn add lodash-webpack-plugin babel-plugin-lodash
+   ```
+2. In `webpack.rewire.js` file, add code:
+   ```javascript
+   // merged this plugin into webpack's property `plugins`.
+   const LodashModuleReplacementPlugin = require('lodash-webpack-plugin')
+   new LodashModuleReplacementPlugin()
 
-## Adding Custom Environment Variables
-`.env`. `.env.development`. `.env.production` ... [添加自定义环境变量](https://create-react-app.dev/docs/adding-custom-environment-variables/). [高级配置](https://create-react-app.dev/docs/advanced-configuration/).
-
-## 分离打包部分依赖库，提高构建速度 （dllPlugin & dllReferencePlugin）
-`.env`文件：
-```
-REACT_APP_DLL_INJECT=false // 配置此参数将不会将打包的依赖bundle注入index.html.
-REACT_APP_DLL_LIBS=["react", "react-dom", "redux", "axios", "qs"] // 配置分离依赖库， 此示例为默认.
-```
-
+   // babel configuration.
+   babelOptions.plugins.push(["lodash"])
+   ```

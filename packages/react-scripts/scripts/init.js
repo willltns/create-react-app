@@ -106,25 +106,6 @@ module.exports = function(
     extends: 'react-app',
   };
 
-  // @willltns-begin
-  // Setup the prettier config
-  appPackage.husky = {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
-  };
-  appPackage["lint-staged"] = {
-    "*.{js,jsx,json}": [
-      "prettier --single-quote --trailing-comma es5 --write",
-      "git add"
-    ],
-    "*.{css,less}": [
-      "prettier --parser css --write",
-      "git add"
-    ]
-  }
-  // @willltns-end
-
   // Setup the browsers list
   appPackage.browserslist = defaultBrowsers;
 
