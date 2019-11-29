@@ -1,7 +1,7 @@
 {
   "name": "ltns-react-scripts",
-  "version": "2.0.0",
-  "description": "Configuration and scripts self-customized from create-react-app@2.1.5.",
+  "version": "3.2.0",
+  "description": "Configuration and scripts self-customized from create-react-app@3.2.0.",
   "repository": "https://github.com/willltns/create-react-app/",
   "license": "MIT",
   "engines": {
