@@ -6,18 +6,18 @@ export default (state = {}, action) => {
     case PAGE2_DATA_GET[REQUEST]: // page2加载数据请求
       return {
         ...state,
-        page2Loading: !state.page2Loading,
+        page2Loading: true,
       }
     case PAGE2_DATA_GET[SUCCESS]: // page2加载数据成功
       return {
         ...state,
         data: 'success',
-        page2Loading: !state.page2Loading,
+        page2Loading: false,
       }
     case PAGE2_DATA_GET[FAILURE]: // page2加载数据失败
       return {
         ...state,
-        page2Loading: !state.page2Loading,
+        page2Loading: false,
       }
     default:
       return state

@@ -70,7 +70,7 @@ module.exports = function(config, webpackEnv) {
         plugin.constructor &&
         plugin.constructor.name === 'HtmlWebpackPlugin'
     )
-    htmlWebpackPlugin.options.dllVendor = 'static/js/' + dllAssets.vendor.js
+    htmlWebpackPlugin.options.dllVendor = '/static/js/' + dllAssets.vendor.js
   }
 
   return mergedConfig;

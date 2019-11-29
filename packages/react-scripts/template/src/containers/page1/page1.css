@@ -9,11 +9,20 @@
 }
 
 .page1 span {
-  margin-left: 20px;
+  margin: 0 10px 0 20px;
   font-size: 26px;
   font-weight: bold;
 }
 
 .react-logo {
   width: 100px;
+}
+
+.href-click {
+  user-select: none;
+  cursor: pointer;
+}
+
+.href-click:hover {
+  opacity: 0.85;
 }

@@ -11,6 +11,7 @@
     "connected-react-router": "6.5.2",
     "less": "^3.10.3",
     "less-loader": "^5.0.0",
-    "webpack-merge": "^4.2.2"
+    "webpack-merge": "^4.2.2",
+    "copy-webpack-plugin": "^5.0.5"
   }
 }

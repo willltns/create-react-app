@@ -1,7 +1,8 @@
 ### `npm start`
 
 Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.<br />
+Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+
 The page will reload if you make edits.<br />
 You will also see any lint errors in the console.
 
@@ -10,7 +11,6 @@ You will also see any lint errors in the console.
 Before run `npm run build`, Please see dll-related information below first.<br>
 
 Builds the app for production to the `build` folder.<br />
-
 It correctly bundles React in production mode and optimizes the build for the best performance.<br />
 
 The build is minified and the filenames include the hashes.<br />
@@ -23,7 +23,7 @@ If you do not need dll vendor chunk, you should delete dll-related configuration
 delete file `./src/common/utils/webpack.dll.js`, and ignore the steps below.
 
 Or following the steps to build vendor file:
-1. `yarn add copy-webpack-plugin` & `yarn add webpack-cli clean-webpack-plugin assets-webpack-plugin -D`
+1. `yarn add webpack-cli clean-webpack-plugin assets-webpack-plugin -D`
 2. In `package.json`, add new script command:
    ```json
    {
@@ -65,18 +65,16 @@ At first time project initial stage, you should manually install `prettier`, `hu
      }
    }
    ``` 
-
+When executing `git commit`, it would automatically formatting your code.
 
 ### Customizing Environment Variables for Arbitrary Build Environments
-You can create an arbitrary build environment by creating a custom .env file and loading it using [env-cmd](https://www.npmjs.com/package/env-cmd).
-
+You can create an arbitrary build environment by creating a custom .env file and loading it using [env-cmd](https://www.npmjs.com/package/env-cmd).<br/>
 [https://create-react-app.dev/docs/deployment/#customizing-environment-variables-for-arbitrary-build-environments](https://create-react-app.dev/docs/deployment/#customizing-environment-variables-for-arbitrary-build-environments)
    
 ### Adding Custom Environment Variables
 `.env`. `.env.development`. `.env.production` ... 
 
-[https://create-react-app.dev/docs/adding-custom-environment-variables/](https://create-react-app.dev/docs/adding-custom-environment-variables/). 
-
+[https://create-react-app.dev/docs/adding-custom-environment-variables/](https://create-react-app.dev/docs/adding-custom-environment-variables/).<br/>
 [https://create-react-app.dev/docs/advanced-configuration/](https://create-react-app.dev/docs/advanced-configuration/).
 
 ### Analyzing the bundle size. (Visualizing)
@@ -91,8 +89,6 @@ You can create an arbitrary build environment by creating a custom .env file and
 
 
 2. Or the official recommended way --> [Analyzing the Bundle Size](https://create-react-app.dev/docs/analyzing-the-bundle-size/)
-
-When executing `git commit`, it would automatically formatting your code.
 
 ### ant-design
 `yarn add antd` or `npm install antd --save`.
