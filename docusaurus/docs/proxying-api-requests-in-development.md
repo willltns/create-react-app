@@ -17,7 +17,7 @@ Such setup is **not** required. However, if you **do** have a setup like this, i
 
 To tell the development server to proxy any unknown requests to your API server in development, add a `proxy` field to your `package.json`, for example:
 
-```js
+```json
   "proxy": "http://localhost:4000",
 ```
 
@@ -74,7 +74,7 @@ You can use this feature in conjunction with the `proxy` property in `package.js
 
 First, install `http-proxy-middleware` using npm or Yarn:
 
-```bash
+```sh
 $ npm install http-proxy-middleware --save
 $ # or
 $ yarn add http-proxy-middleware
@@ -96,7 +96,10 @@ You can now register proxies as you wish! Here's an example using the above `htt
 const proxy = require('http-proxy-middleware');
 
 module.exports = function(app) {
-  app.use(proxy('/api', { target: 'http://localhost:5000/' }));
+  app.use('/api', proxy({
+    target: 'http://localhost:5000',
+    changeOrigin: true,
+  }));
 };
 ```
 
