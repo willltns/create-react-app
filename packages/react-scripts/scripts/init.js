@@ -248,18 +248,20 @@ module.exports = function (
   }
 
   // modifies README.md commands based on user used package manager.
-  if (useYarn) {
-    try {
-      const readme = fs.readFileSync(path.join(appPath, 'README.md'), 'utf8');
-      fs.writeFileSync(
-        path.join(appPath, 'README.md'),
-        readme.replace(/(npm run |npm )/g, 'yarn '),
-        'utf8'
-      );
-    } catch (err) {
-      // Silencing the error. As it fall backs to using default npm commands.
-    }
-  }
+  // @willltns --- begin: comment code.
+  // if (useYarn) {
+  //   try {
+  //     const readme = fs.readFileSync(path.join(appPath, 'README.md'), 'utf8');
+  //     fs.writeFileSync(
+  //       path.join(appPath, 'README.md'),
+  //       readme.replace(/(npm run |npm )/g, 'yarn '),
+  //       'utf8'
+  //     );
+  //   } catch (err) {
+  //     // Silencing the error. As it fall backs to using default npm commands.
+  //   }
+  // }
+  // @willltns --- end: comment code.
 
   const gitignoreExists = fs.existsSync(path.join(appPath, '.gitignore'));
   if (gitignoreExists) {
@@ -320,7 +322,7 @@ module.exports = function (
   }
 
   // Install template dependencies, and react and react-dom if missing.
-  if ((!isReactInstalled(appPackage) || templateName) && args.length > 1) { //@@@ltnss
+  if ((!isReactInstalled(appPackage) || templateName) && args.length > 1) {
     console.log();
     console.log(`Installing template dependencies using ${command}...`);
 
@@ -329,7 +331,7 @@ module.exports = function (
       console.error(`\`${command} ${args.join(' ')}\` failed`);
       return;
     }
-  } //@@@ltnss
+  }
 
   if (args.find(arg => arg.includes('typescript'))) {
     console.log();
