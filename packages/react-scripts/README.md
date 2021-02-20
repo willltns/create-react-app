@@ -1,22 +1,18 @@
-[package location](https://github.com/willltns/create-react-app/tree/release/packages/react-scripts)
+Every newly modified or added place compared with official package is commented with a `@willltns` mark,
+and one new file `/react-scripts/config/webpack.rewire.js` to extend webpack configuration.
 
-`react` & `react-router` & `redux` & `redux-saga` & `axios`...
+---
+---
 
-Project structure template is placed in  `/react-scripts/template` directory.
+[github location](https://github.com/willltns/create-react-app/tree/release/packages/react-scripts)
 
-`.template.dependencies.json` file configs the dependencies of this project and will be automatically installed while initializing.
+Use with a custom template [cra-template-ltns](https://www.npmjs.com/package/cra-template-ltns)
 
-Following is modified places relative to official react-scripts.
-
-Every newly added or modified place is commented a `@willltns` mark.
-
-`/react-scripts/scripts/start.js`. 
-
-`/react-scripts/scripts/build.js`. 
-
-`/react-scripts/package.json`. (publish information about package).
-
-And finally one new file `/react-scripts/config/webpack.rewire.js` to extend webpack configuration.
+```sh
+  $ npx create-react-app my-app --scripts-version ltns-react-scripts --template cra-template-ltns
+  $ cd my-app
+  $ npm start
+```
 
 ---
 ---
